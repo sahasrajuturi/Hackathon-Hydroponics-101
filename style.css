@@ -1318,73 +1318,11 @@ a {
     box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
 }
 
-/* 2. Simulator Action Controls */
-.simulator-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.sim-action-btn {
-    background: rgba(46, 125, 50, 0.06);
-    border: 1px solid rgba(46, 125, 50, 0.12);
-    padding: 12px;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--dark-olive);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.sim-action-btn:hover {
-    background: rgba(46, 125, 50, 0.12);
-    transform: translateY(-1px);
-}
-
-.sim-action-btn.active {
-    background: rgba(129, 212, 250, 0.15);
-    border-color: var(--water-blue);
-    color: #0288D1;
-}
-
-#btn-sim-pump {
-    grid-column: span 2;
-}
-
-/* Simulator Advice Log Box */
-.simulator-advice-box {
-    background: rgba(255, 255, 255, 0.9);
-    border-left: 4px solid var(--secondary);
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
-}
-
-.advice-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--dark-olive);
-    margin-bottom: 6px;
-}
-
-.advice-content {
-    font-size: 0.88rem;
-    color: #444;
-    line-height: 1.5;
-}
-
-/* 3. Choose Your Crop Section Styling */
+/* 2. Choose Your Crop Section Styling */
 .crop-section {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(208, 240, 192, 0.08) 50%, rgba(255, 255, 255, 0) 100%);
     position: relative;
+    padding: 10px 0;
 }
 
 .crop-grid {
@@ -1454,6 +1392,15 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Crop Card switching fade-slide transition */
+.crop-details-card.switching {
+    opacity: 0;
+    transform: translateY(12px);
 }
 
 .crop-details-header {
@@ -1524,7 +1471,7 @@ a {
     border-left: 3px solid var(--secondary);
 }
 
-/* 4. Calculator Section Styling */
+/* 3. Calculator Section Styling */
 .calc-section {
     position: relative;
 }
@@ -1535,12 +1482,13 @@ a {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(46, 125, 50, 0.1);
     border-radius: 28px;
-    padding: 48px;
+    padding: 40px;
     box-shadow: var(--shadow-lg);
     display: grid;
     grid-template-columns: 1fr 1.2fr;
-    gap: 60px;
+    gap: 48px;
     align-items: center;
+    width: 100%;
 }
 
 .calc-inputs {
@@ -1570,7 +1518,7 @@ a {
 .calc-outputs {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 }
 
 .calc-output-box {
@@ -1627,7 +1575,14 @@ a {
     transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Responsive details for new sections */
+/* ==========================================
+   RESPONSIVENESS & OVERFLOW FIXES
+   ========================================== */
+
+.section-container {
+    padding: clamp(40px, 8vw, 80px) 20px;
+}
+
 @media (max-width: 1024px) {
     .crop-grid {
         grid-template-columns: 1fr;
@@ -1635,8 +1590,8 @@ a {
     }
     .calc-card {
         grid-template-columns: 1fr;
-        gap: 48px;
-        padding: 32px;
+        gap: 40px;
+        padding: 32px 24px;
     }
 }
 
@@ -1646,11 +1601,13 @@ a {
         overflow-x: auto;
         padding-bottom: 12px;
         gap: 12px;
+        -webkit-overflow-scrolling: touch;
     }
     .crop-btn {
         flex-shrink: 0;
         padding: 12px 20px;
         border-radius: 14px;
+        width: auto;
     }
     .crop-btn.active {
         border-left: 1px solid var(--primary);
@@ -1660,5 +1617,26 @@ a {
         padding: 24px;
         min-height: auto;
     }
+    .calc-card {
+        padding: 20px 16px;
+    }
+    .calc-val-number {
+        font-size: 1.8rem;
+    }
 }
+
+@media (max-width: 480px) {
+    .canvas3d-wrapper {
+        height: 280px !important;
+        max-width: 280px !important;
+        margin: 0 auto;
+    }
+    .calc-output-box {
+        padding: 16px;
+    }
+    .calc-val-number {
+        font-size: 1.6rem;
+    }
+}
+
 

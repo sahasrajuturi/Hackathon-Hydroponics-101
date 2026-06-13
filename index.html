@@ -116,8 +116,8 @@
                 <!-- Growth Simulator Card -->
                 <div class="simulator-card card-reveal">
                     <div class="simulator-header">
-                        <h4>Farmspherica Grow Station Dashboard</h4>
-                        <p>Track plant conditions, trigger cycles, or slide the timeline to simulate 30 days of growth.</p>
+                        <h4>Farmspherica Growth Simulator</h4>
+                        <p>Drag the slider to see a plant grow hydroponically in our chamber.</p>
                     </div>
                     
                     <div class="simulator-display">
@@ -159,31 +159,14 @@
                                 <span class="stat-value" id="sim-root-val">5%</span>
                             </div>
                             <div class="stat-row">
-                                <span class="stat-label">pH Level:</span>
-                                <span class="stat-value status-active" id="sim-ph-val">5.8 (Ideal)</span>
+                                <span class="stat-label">Water Used:</span>
+                                <span class="stat-value" id="sim-water-val">0.1 Liters</span>
                             </div>
                             <div class="stat-row">
-                                <span class="stat-label">EC (Nutrients):</span>
-                                <span class="stat-value" id="sim-ec-val">1.2 mS/cm</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Water Tank:</span>
-                                <span class="stat-value" id="sim-water-pct">100%</span>
+                                <span class="stat-label">System State:</span>
+                                <span class="stat-value status-active" id="sim-state-val">Germinating</span>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Simulator Action Buttons -->
-                    <div class="simulator-actions">
-                        <button class="sim-action-btn" id="btn-sim-refill" title="Refill reservoir to 100%">💧 Refill Water</button>
-                        <button class="sim-action-btn" id="btn-sim-dose" title="Increase nutrient EC concentration">🧪 Dose Nutrients</button>
-                        <button class="sim-action-btn active" id="btn-sim-pump" title="Toggle root aeration bubbles">🫧 Toggle Pump</button>
-                    </div>
-
-                    <!-- Grower's advice log -->
-                    <div class="simulator-advice-box">
-                        <div class="advice-title">📋 Grower's Daily Log:</div>
-                        <div class="advice-content" id="sim-advice-text">Keep humidity domes secure. Seed is absorbing initial moisture; LED set to low blue spectrum to initiate primary root anchoring.</div>
                     </div>
                     
                     <div class="simulator-control">
