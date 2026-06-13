@@ -75,6 +75,13 @@
                         <span class="pulse-dot"></span> Drag to Rotate Farmspherica 3D Model
                     </div>
                 </div>
+                <div class="hero-3d-controls">
+                    <button class="control-btn active" id="btn-led-full" data-spectrum="full">☀️ Sun</button>
+                    <button class="control-btn" id="btn-led-roots" data-spectrum="roots">🔵 Roots</button>
+                    <button class="control-btn" id="btn-led-veg" data-spectrum="veg">🌸 Grow</button>
+                    <button class="control-btn" id="btn-dose-nutrients">🧪 Dose</button>
+                    <button class="control-btn active" id="btn-auto-rotate">🔄 Rotate</button>
+                </div>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -109,8 +116,8 @@
                 <!-- Growth Simulator Card -->
                 <div class="simulator-card card-reveal">
                     <div class="simulator-header">
-                        <h4>Farmspherica Growth Simulator</h4>
-                        <p>Drag the slider to see a plant grow hydroponically in our chamber.</p>
+                        <h4>Farmspherica Grow Station Dashboard</h4>
+                        <p>Track plant conditions, trigger cycles, or slide the timeline to simulate 30 days of growth.</p>
                     </div>
                     
                     <div class="simulator-display">
@@ -152,14 +159,31 @@
                                 <span class="stat-value" id="sim-root-val">5%</span>
                             </div>
                             <div class="stat-row">
-                                <span class="stat-label">Water Used:</span>
-                                <span class="stat-value" id="sim-water-val">0.1 Liters</span>
+                                <span class="stat-label">pH Level:</span>
+                                <span class="stat-value status-active" id="sim-ph-val">5.8 (Ideal)</span>
                             </div>
                             <div class="stat-row">
-                                <span class="stat-label">System State:</span>
-                                <span class="stat-value status-active" id="sim-state-val">Germinating</span>
+                                <span class="stat-label">EC (Nutrients):</span>
+                                <span class="stat-value" id="sim-ec-val">1.2 mS/cm</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Water Tank:</span>
+                                <span class="stat-value" id="sim-water-pct">100%</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Simulator Action Buttons -->
+                    <div class="simulator-actions">
+                        <button class="sim-action-btn" id="btn-sim-refill" title="Refill reservoir to 100%">💧 Refill Water</button>
+                        <button class="sim-action-btn" id="btn-sim-dose" title="Increase nutrient EC concentration">🧪 Dose Nutrients</button>
+                        <button class="sim-action-btn active" id="btn-sim-pump" title="Toggle root aeration bubbles">🫧 Toggle Pump</button>
+                    </div>
+
+                    <!-- Grower's advice log -->
+                    <div class="simulator-advice-box">
+                        <div class="advice-title">📋 Grower's Daily Log:</div>
+                        <div class="advice-content" id="sim-advice-text">Keep humidity domes secure. Seed is absorbing initial moisture; LED set to low blue spectrum to initiate primary root anchoring.</div>
                     </div>
                     
                     <div class="simulator-control">
@@ -170,6 +194,69 @@
                             <span>Day 30</span>
                         </div>
                         <input type="range" id="growth-slider" min="1" max="100" value="1" class="custom-slider">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Choose Your Crop Section -->
+    <section id="crop-picker" class="crop-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Farmspherica Interactive</span>
+                <h2 class="section-title">What Will You Grow?</h2>
+                <p class="section-subtitle">Click a crop to instantly configure the 3D model in the Hero dome and preview its growth statistics.</p>
+            </div>
+            
+            <div class="crop-grid">
+                <div class="crop-selector-panel">
+                    <button class="crop-btn active" data-crop="lettuce">
+                        <span class="crop-icon">🥬</span>
+                        <span class="crop-label">Butterhead Lettuce</span>
+                    </button>
+                    <button class="crop-btn" data-crop="basil">
+                        <span class="crop-icon">🌿</span>
+                        <span class="crop-label">Sweet Genovese Basil</span>
+                    </button>
+                    <button class="crop-btn" data-crop="mint">
+                        <span class="crop-icon">🌱</span>
+                        <span class="crop-label">Peppermint</span>
+                    </button>
+                    <button class="crop-btn" data-crop="strawberry">
+                        <span class="crop-icon">🍓</span>
+                        <span class="crop-label">Fresh Strawberries</span>
+                    </button>
+                </div>
+                
+                <div class="crop-details-card card-reveal">
+                    <div class="crop-details-header">
+                        <h3 id="crop-name">Butterhead Lettuce</h3>
+                        <span class="crop-tag-difficulty" id="crop-diff">Easy</span>
+                    </div>
+                    <p id="crop-desc">Crisp, sweet, and tender. Grows into dense, heavy heads that are perfect for fresh salads. Great starter crop!</p>
+                    
+                    <div class="crop-stats-grid">
+                        <div class="crop-stat-box">
+                            <span class="crop-stat-title">Growth Cycle</span>
+                            <span class="crop-stat-number" id="crop-cycle">28 Days</span>
+                        </div>
+                        <div class="crop-stat-box">
+                            <span class="crop-stat-title">Ideal pH</span>
+                            <span class="crop-stat-number" id="crop-ph">5.6 - 6.0</span>
+                        </div>
+                        <div class="crop-stat-box">
+                            <span class="crop-stat-title">EC (Nutrients)</span>
+                            <span class="crop-stat-number" id="crop-ec">1.2 - 1.8</span>
+                        </div>
+                        <div class="crop-stat-box">
+                            <span class="crop-stat-title">Weekly Yield</span>
+                            <span class="crop-stat-number" id="crop-yield">~150g</span>
+                        </div>
+                    </div>
+                    
+                    <div class="crop-action-info">
+                        💡 <em>Selecting a crop morphs the 3D seedling model in the Hero section above! Check it out.</em>
                     </div>
                 </div>
             </div>
@@ -272,6 +359,63 @@
                     </div>
                     <h3>All-Year Round</h3>
                     <p>Grow crisp lettuce in winter and sweet strawberries in summer. Control the indoor climate and LEDs to harvest delicious produce 365 days a year.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Savings & Sustainability Calculator Section -->
+    <section id="calculator" class="calc-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Eco-Savings</span>
+                <h2 class="section-title">Calculate Your Impact</h2>
+                <p class="section-subtitle">Adjust the sliders to see how much water, money, and carbon footprint you save by growing with Farmspherica.</p>
+            </div>
+            
+            <div class="calc-card card-reveal">
+                <div class="calc-inputs">
+                    <div class="calc-input-group">
+                        <label for="calc-lettuce">Weekly Lettuce / Greens Consumption: <span id="lettuce-qty-label">3 heads</span></label>
+                        <input type="range" id="calc-lettuce" min="0" max="10" value="3" class="custom-slider">
+                    </div>
+                    
+                    <div class="calc-input-group">
+                        <label for="calc-herbs">Weekly Herb Packets Consumption: <span id="herbs-qty-label">2 packets</span></label>
+                        <input type="range" id="calc-herbs" min="0" max="8" value="2" class="custom-slider">
+                    </div>
+                </div>
+                
+                <div class="calc-outputs">
+                    <!-- Output 1: Water saved -->
+                    <div class="calc-output-box">
+                        <div class="calc-val-title">Water Conserved</div>
+                        <div class="calc-val-number" id="calc-water-saved">4,212 L</div>
+                        <div class="calc-val-desc">Liters saved per year compared to soil agriculture</div>
+                        <div class="calc-progress-bar">
+                            <div class="calc-progress-fill" id="water-bar" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Output 2: Money saved -->
+                    <div class="calc-output-box">
+                        <div class="calc-val-title">Annual Groceries Saved</div>
+                        <div class="calc-val-number" id="calc-money-saved">₹7,800</div>
+                        <div class="calc-val-desc">Saved by replacing store-bought produce</div>
+                        <div class="calc-progress-bar">
+                            <div class="calc-progress-fill" id="money-bar" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Output 3: Carbon Offset -->
+                    <div class="calc-output-box">
+                        <div class="calc-val-title">CO₂ Footprint Reduced</div>
+                        <div class="calc-val-number" id="calc-co2-saved">15.6 kg</div>
+                        <div class="calc-val-desc">Saved in food transport & packaging emissions</div>
+                        <div class="calc-progress-bar">
+                            <div class="calc-progress-fill" id="co2-bar" style="width: 35%;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
