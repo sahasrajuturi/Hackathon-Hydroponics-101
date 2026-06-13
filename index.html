@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmspherica | Hydroponics Made Effortless</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* --- Color Palette Inspired by aavrt.com --- */
+        :root {
+            --primary: #10b981;
+            /* Vibrant Leaf Green */
+            --primary-dark: #059669;
+            /* Deep Emerald Green */
+            --dark: #0f172a;
+            /* Premium Slate Black */
+            --light: #f8fafc;
+            /* Crisp Soft White */
+            --text-muted: #64748b;
+            /* Clean Gray text */
+            --font: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- 3D Background Canvas --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 10%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        /* --- Hero Section --- */
+        header {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .hero-text h1 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Dedicated container for interactive Farmspherica 3D model */
+        #farmspherica-3d-model {
+            width: 100%;
+            height: 450px;
+            cursor: grab;
+        }
+
+        #farmspherica-3d-model:active {
+            cursor: grabbing;
+        }
+
+        /* --- Global Sections Styles --- */
+        section {
+            padding: 5rem 10%;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 4rem;
+            font-size: 1.1rem;
+        }
+
+        /* --- What is Hydroponics Section --- */
+        .intro-box {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 3.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-box p {
+            font-size: 1.2rem;
+            color: #475569;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- How It Works Section --- */
+        .step-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .step-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            transition: transform 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .step-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* --- Benefits Grid --- */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            background: var(--dark);
+            color: white;
+        }
+
+        .benefit-card:hover p {
+            color: #94a3b8;
+        }
+
+        .benefit-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+        }
+
+        /* --- Testimonials --- */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        }
+
+        .stars {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+
+        .client-info {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 10% 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-about h3,
+        .footer-contact h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-about p {
+            color: #94a3b8;
+        }
+
+        .footer-contact p {
+            margin-bottom: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive Viewports (Mobile First tweaks) --- */
+        @media (max-width: 968px) {
+            header {
+                padding-top: 6rem;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text p {
+                margin: 0 auto 2rem;
+            }
+
+            #farmspherica-3d-model {
+                height: 300px;
+            }
+
+            section {
+                padding: 4rem 5%;
+            }
+
+            .intro-box {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="canvas-container"></div>
+
+    <nav>
+        <div class="logo">
+            <i class="fa-solid degrad-icon fa-seedling"></i> Farmspherica
+        </div>
+        <a href="#cta" class="btn" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Join Now</a>
+    </nav>
+
+    <header>
+        <div class="hero-grid">
+            <div class="hero-text">
+                <h1>Smarter Farming. <span>No Soil Required.</span></h1>
+                <p>Farmspherica brings future-proof, indoor hydroponic setups right to your living space. Grow fresh,
+                    pesticide-free food effortlessly.</p>
+                <a href="#about" class="btn">Get Started <i class="fa-solid fa-arrow-right"
+                        style="margin-left: 0.5rem;"></i></a>
+            </div>
+            <div id="farmspherica-3d-model"></div>
+        </div>
+    </header>
+
+    <section id="about">
+        <h2 class="section-title">What is Hydroponics?</h2>
+        <p class="section-subtitle">Pure simplicity. Discover how plants flourish without ground soil.</p>
+        <div class="intro-box">
+            <p><strong>Hydroponics</strong> is a revolutionary method of growing plants using nutrient-rich water
+                instead of traditional soil.</p>
+            <p>Instead of forcing roots to dig through packed dirt searching for food, we deliver water packed with
+                perfect plant minerals directly to them. This helps plants spend energy growing bigger, healthier leaves
+                and fruits faster than ever thought possible.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">3 Simple Steps</h2>
+        <p class="section-subtitle">How your Farmspherica smart automated garden runs daily.</p>
+        <div class="step-row">
+            <div class="step-card">
+                <div class="step-icon"><i class="fa-solid fa-cube"></i></div>
+                <h3>1. Place Pods</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Drop our pre-seeded organic plant pods into
+                    your automated smart tray slot.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="fa-solid fa-droplet"></i></div>
+                <h3>2. Add Water</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Fill up the specialized tank reservoir with
+                    clean water and nutrient minerals.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>3. Plug & Harvest</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Power it on! Our automated cycle manages light
+                    & watering settings perfectly.</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: rgba(241, 245, 249, 0.6); backdrop-filter: blur(5px);">
+        <h2 class="section-title">Why Choose Farmspherica?</h2>
+        <p class="section-subtitle">Engineered to bring clean optimization to modern home crop growth.</p>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fa-solid fa-cloud-water-drop"></i>
+                <h3 style="margin-bottom: 0.5rem;">Saves 95% Water</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Recirculating water systems mean zero wastage
+                    compared to traditional open topsoil watering.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-gauge-high"></i>
+                <h3 style="margin-bottom: 0.5rem;">3x Faster Growth</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Direct root access to oxygen and vital
+                    nutrients optimizes plant development schedules naturally.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-ban"></i>
+                <h3 style="margin-bottom: 0.5rem;">Zero Soil Mess</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Eliminating soil means no weeds to pull, no
+                    heavy lifting, and absolutely no ground pests.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h3 style="margin-bottom: 0.5rem;">All Year Round</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Completely immune to outdoor winter freezes,
+                    unexpected heatwaves, or bad weather storms.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">What Our Growers Say</h2>
+        <p class="section-subtitle">Real people achieving clean food sovereignty right inside their kitchens.</p>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p>"I killed every houseplant I ever owned, but my Farmspherica system is booming with fresh basil and
+                    kale leaves every week!"</p>
+                <div class="client-info">— Sarah M., Urban Homesteader</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p>"An amazingly optimized clean design. My kids love watching the roots take up water under the LED
+                    lighting systems."</p>
+                <div class="client-info">— David K., Tech Engineer</div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="cta">
+        <div class="footer-grid">
+            <div class="footer-about">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-seedling"></i> Farmspherica
+                </div>
+                <p>Bringing sustainable, pristine, futuristic farming solutions to homes and businesses across the
+                    globe.</p>
+            </div>
+            <div class="footer-contact">
+                <h3>Get In Touch</h3>
+                <p><i class="fa-solid fa-envelope"></i> support@farmspherica.com</p>
+                <p><i class="fa-solid fa-phone"></i> +1 (555) 839-2001</p>
+                <p><i class="fa-solid fa-location-dot"></i> Tech Park Innovation Center, Suite 402</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Farmspherica Innovations. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Background Interactive Floating Matrix Particles ---
+        const bgScene = new THREE.Scene();
+        const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(bgRenderer.domElement);
+
+        const particleCount = 70;
+        const geometry = new THREE.IcosahedronGeometry(0.1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true });
+        const instancedMesh = new THREE.Group();
+
+        for (let i = 0; i < particleCount; i++) {
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 15,
+                (Math.random() - 0.5) * 15,
+                (Math.random() - 0.5) * 15
+            );
+            mesh.userData = {
+                speedX: (Math.random() - 0.5) * 0.01,
+                speedY: (Math.random() - 0.5) * 0.01
+            };
+            instancedMesh.add(mesh);
+        }
+        bgScene.add(instancedMesh);
+        bgCamera.position.z = 5;
+
+        // --- 2. Dedicated Interactive Hero Abstract Hydroponic 3D Object ---
+        const heroContainer = document.getElementById('farmspherica-3d-model');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(45, heroContainer.clientWidth / heroContainer.clientHeight, 0.1, 100);
+        const heroRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        heroRenderer.setSize(heroContainer.clientWidth, heroContainer.clientHeight);
+        heroContainer.appendChild(heroRenderer.domElement);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        heroScene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0x10b981, 1.5);
+        dirLight.position.set(5, 10, 7);
+        heroScene.add(dirLight);
+
+        // Abstract Hydroponic Plant & Pod Mesh Geometry Group
+        const hydroGroup = new THREE.Group();
+
+        // Base Reservoir Ring
+        const ringGeo = new THREE.CylinderGeometry(1.2, 1.4, 0.4, 32);
+        const ringMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2 });
+        const baseRing = new THREE.Mesh(ringGeo, ringMat);
+        baseRing.position.y = -1.2;
+        hydroGroup.add(baseRing);
+
+        // Plant central sprout stem
+        const stemGeo = new THREE.CylinderGeometry(0.08, 0.15, 2, 16);
+        const stemMat = new THREE.MeshStandardMaterial({ color: 0x059669, roughness: 0.5 });
+        const stem = new THREE.Mesh(stemGeo, stemMat);
+        hydroGroup.add(stem);
+
+        // Floating geometric nodes (Representing nutrient-fed energy growth)
+        const nodeGeo = new THREE.DodecahedronGeometry(0.35, 0);
+        const nodeMat = new THREE.MeshStandardMaterial({ color: 0x10b981, metalness: 0.1, roughness: 0.1 });
+
+        const node1 = new THREE.Mesh(nodeGeo, nodeMat);
+        node1.position.set(0.6, 0.4, 0);
+        const node2 = new THREE.Mesh(nodeGeo, nodeMat);
+        node2.position.set(-0.6, -0.2, 0);
+
+        hydroGroup.add(node1, node2);
+        heroScene.add(hydroGroup);
+        heroCamera.position.z = 4.5;
+
+        // Mouse Drag Interaction Variables for Hero 3D Object
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        heroContainer.addEventListener('mousedown', (e) => { isDragging = true; });
+        heroContainer.addEventListener('mousemove', (e) => {
+            const deltaMove = {
+                x: e.offsetX - previousMousePosition.x,
+                y: e.offsetY - previousMousePosition.y
+            };
+
+            if (isDragging) {
+                hydroGroup.rotation.y += deltaMove.x * 0.01;
+                hydroGroup.rotation.x += deltaMove.y * 0.01;
+            }
+
+            previousMousePosition = { x: e.offsetX, y: e.offsetY };
+        });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Touch Interaction Support for Mobile Screen Responsiveness
+        heroContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+        heroContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const deltaMove = {
+                x: e.touches[0].clientX - previousMousePosition.x,
+                y: e.touches[0].clientY - previousMousePosition.y
+            };
+            hydroGroup.rotation.y += deltaMove.x * 0.01;
+            hydroGroup.rotation.x += deltaMove.y * 0.01;
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        // --- 3. Unified Animation Loop Execution ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate background ambient molecules
+            instancedMesh.children.forEach(particle => {
+                particle.position.x += particle.userData.speedX;
+                particle.position.y += particle.userData.speedY;
+
+                // Simple boundaries bounce
+                if (Math.abs(particle.position.x) > 8) particle.userData.speedX *= -1;
+                if (Math.abs(particle.position.y) > 6) particle.userData.speedY *= -1;
+                particle.rotation.x += 0.01;
+            });
+            instancedMesh.rotation.y += 0.001;
+
+            // Idle rotate Hero 3D model when user isn't dragging it
+            if (!isDragging) {
+                hydroGroup.rotation.y += 0.005;
+            }
+
+            bgRenderer.render(bgScene, bgCamera);
+            heroRenderer.render(heroScene, heroCamera);
+        }
+
+        // --- 4. Window Resize Layout Readjustments ---
+        window.addEventListener('resize', () => {
+            // Update Background Canvas
+            bgCamera.aspect = window.innerWidth / window.innerHeight;
+            bgCamera.updateProjectionMatrix();
+            bgRenderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Update Hero Element Canvas
+            heroCamera.aspect = heroContainer.clientWidth / heroContainer.clientHeight;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(heroContainer.clientWidth, heroContainer.clientHeight);
+        });
+
+        animate();
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
